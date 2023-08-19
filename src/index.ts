@@ -23,7 +23,10 @@ export type WithExtras<T> = T extends object
   ? { [P in keyof T]: WithExtras<T[P]> } & { [prop: string]: unknown }
   : T;
 
-export class Defaults<T extends object, U extends DeepPartial<T>> {
+export class Defaults<
+  T extends object,
+  U extends DeepPartial<T> = DeepPartial<T>,
+> {
   #defaults: T;
   #replacer?: ReplacerObject<T>;
 
@@ -76,7 +79,7 @@ export class Defaults<T extends object, U extends DeepPartial<T>> {
     return result as T & U;
   }
 
-  assign(target: U): T & U {
-    return Defaults.with(this.#defaults, target, this.#replacer);
+  assign(target: U, replacer?: ReplacerObject<T>): T & U {
+    return Defaults.with(this.#defaults, target, replacer ?? this.#replacer);
   }
 }
